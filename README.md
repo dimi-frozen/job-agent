@@ -24,8 +24,9 @@
 
 - [x] 确认产品范围和技术边界
 - [x] 建立项目骨架
-- [ ] 完成 Day 1 核心数据模型
-- [ ] 使用 SQLite 保存并读取档案、能力和证据
+- [x] 完成 Day 1 核心数据模型
+- [x] 实测 SQLite 保存并读取档案、能力和证据
+- [ ] 补齐 Day 1 非空校验与数据库自动验收
+- [ ] 完成 Day 2 完整档案读取和 Chroma 可追溯检索
 
-今天的任务见 [docs/day-01.md](docs/day-01.md)。架构边界见 [docs/architecture.md](docs/architecture.md)。
-
+Day 1 记录见 [docs/day-01.md](docs/day-01.md)，下一次学习见 [docs/day-02.md](docs/day-02.md)。架构边界见 [docs/architecture.md](docs/architecture.md)。

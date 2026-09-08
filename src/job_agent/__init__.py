@@ -1,2 +1,1 @@
-"""Career Evidence Agent package."""
-
+"""求职证据 Agent 软件包。"""

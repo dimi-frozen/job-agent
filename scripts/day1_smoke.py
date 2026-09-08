@@ -1,4 +1,4 @@
-"""Executable contract for the first domain-model exercise."""
+"""用于检查第一阶段领域模型是否符合约定的可执行脚本。"""
 
 from job_agent.domain.models import (
     Capability,
@@ -44,8 +44,26 @@ def check_contract() -> None:
             f"got {actual_fields}"
         )
 
+def check_non_empty_strings() -> None:
+    invalid_cases = [
+        lambda: Profile(name=""),
+        lambda: Capability(profile_id="p1", name=""),
+        lambda: Evidence(
+            capability_id="c1",
+            source_type="code",
+            summary="",
+        ),
+    ]
+
+    for create_model in invalid_cases:
+        try:
+            create_model()
+        except ValidationError:
+            continue
+
+        raise AssertionError("空字符串应该触发 ValidationError")
 
 if __name__ == "__main__":
     check_contract()
+    check_non_empty_strings()
     print("Day 1 domain contract passed.")
-
