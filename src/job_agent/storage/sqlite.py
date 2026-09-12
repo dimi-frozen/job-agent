@@ -180,6 +180,34 @@ def load_capability(
     )
 
 
+def list_capabilities_by_profile(
+    connection: sqlite3.Connection,
+    profile_id: str,
+) -> list[Capability]:
+    """读取一份用户档案下的全部能力。"""
+
+    rows = connection.execute(
+        """
+        SELECT id, profile_id, name, level, updated_at
+        FROM capabilities
+        WHERE profile_id = ?
+        ORDER BY updated_at, id
+        """,
+        (profile_id,),
+    ).fetchall()
+
+    return [
+        Capability(
+            id=row["id"],
+            profile_id=row["profile_id"],
+            name=row["name"],
+            level=CapabilityLevel(row["level"]),
+            updated_at=datetime.fromisoformat(row["updated_at"]),
+        )
+        for row in rows
+    ]
+
+
 def save_evidence(
     connection: sqlite3.Connection,
     evidence: Evidence,
@@ -246,3 +274,55 @@ def load_evidence(
         status=EvidenceStatus(row["status"]),
         created_at=datetime.fromisoformat(row["created_at"]),
     )
+
+
+def list_evidence_by_capability(
+    connection: sqlite3.Connection,
+    capability_id: str,
+) -> list[Evidence]:
+    """读取一项能力下的全部证据。"""
+
+    rows = connection.execute(
+        """
+        SELECT
+            id,
+            capability_id,
+            source_type,
+            source_ref,
+            summary,
+            status,
+            created_at
+        FROM evidence
+        WHERE capability_id = ?
+        ORDER BY created_at, id
+        """,
+        (capability_id,),
+    ).fetchall()
+
+    return [
+        Evidence(
+            id=row["id"],
+            capability_id=row["capability_id"],
+            source_type=row["source_type"],
+            source_ref=row["source_ref"],
+            summary=row["summary"],
+            status=EvidenceStatus(row["status"]),
+            created_at=datetime.fromisoformat(row["created_at"]),
+        )
+        for row in rows
+    ]
+
+
+def list_evidence_by_profile(
+    connection: sqlite3.Connection,
+    profile_id: str,
+) -> list[Evidence]:
+    """读取一份用户档案下全部能力对应的证据。"""
+
+    all_evidence: list[Evidence] = []
+
+    for capability in list_capabilities_by_profile(connection, profile_id):
+        evidence = list_evidence_by_capability(connection, capability.id)
+        all_evidence.extend(evidence)
+
+    return all_evidence

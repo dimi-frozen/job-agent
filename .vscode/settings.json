@@ -1,3 +1,11 @@
 {
-  "editor.suggestOnTriggerCharacters": false
+  "editor.quickSuggestions": {
+    "comments": "on",
+    "strings": "on",
+    "other": "on"
+  },
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.inlineSuggest.enabled": false,
+  "editor.tabCompletion": "off",
+  "QoderCN.cloudModelAutoTriggerGenerateLength": "disable"
 }
