@@ -26,7 +26,9 @@
 - [x] 建立项目骨架
 - [x] 完成 Day 1 核心数据模型
 - [x] 实测 SQLite 保存并读取档案、能力和证据
-- [ ] 补齐 Day 1 非空校验与数据库自动验收
-- [ ] 完成 Day 2 完整档案读取和 Chroma 可追溯检索
+- [x] 补齐 Day 1 非空校验与数据库自动验收
+- [x] 完成 Day 2 完整档案读取和 Chroma 可追溯检索
+- [x] 提交 Day 2 候选证据规则的强化断言
+- [x] 完成 Day 3 JD 结构化抽取
 
-Day 1 记录见 [docs/day-01.md](docs/day-01.md)，下一次学习见 [docs/day-02.md](docs/day-02.md)。架构边界见 [docs/architecture.md](docs/architecture.md)。
+学习记录见 [Day 1](docs/day-01.md)、[Day 2](docs/day-02.md) 和 [Day 3](docs/day-03.md)。架构边界见 [docs/architecture.md](docs/architecture.md)。

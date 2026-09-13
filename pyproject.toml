@@ -9,7 +9,9 @@ description = "Evidence-grounded job analysis agent with a growing capability pr
 requires-python = ">=3.12"
 dependencies = [
     "chromadb>=1.5.9,<2",
+    "openai>=2,<3",
     "pydantic>=2.10,<3",
+    "python-dotenv>=1,<2",
 ]
 
 [project.optional-dependencies]

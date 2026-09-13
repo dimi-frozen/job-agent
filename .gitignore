@@ -1,9 +1,47 @@
+# Python 虚拟环境
 .venv/
+venv/
+env/
+
+# Python 缓存与编译文件
 __pycache__/
 *.py[cod]
+*$py.class
+
+# 构建与安装产物
+build/
+dist/
 *.egg-info/
+
+# 测试、类型检查和覆盖率缓存
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
 .coverage
+htmlcov/
+
+# 本地环境变量与密钥；保留可提交的示例文件
 .env
-data/*.db
+.env.*
+!.env.example
+
+# SQLite 本地数据库及事务临时文件
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Chroma 本地可重建索引
+chroma/
 data/chroma/
+
+# 日志和临时文件
+*.log
+*.tmp
+*.temp
+
+# 操作系统生成文件
+.DS_Store
+Thumbs.db
+Desktop.ini
