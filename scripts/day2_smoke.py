@@ -138,6 +138,9 @@ def check_day2_flow() -> None:
             expected_ids = {evidence.id for evidence in evidence_items}
             assert rejected_evidence.id not in indexed_ids
             assert set(indexed_ids).issubset(expected_ids)
+            candidate_evidence = evidence_items[1]
+            assert candidate_evidence.status is EvidenceStatus.CANDIDATE
+            assert candidate_evidence.id in indexed_ids
 
             unrelated_ids = index.query_evidence_ids("烹饪与摄影", limit=10)
             assert set(unrelated_ids).issubset(expected_ids)
