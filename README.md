@@ -30,5 +30,6 @@
 - [x] 完成 Day 2 完整档案读取和 Chroma 可追溯检索
 - [x] 提交 Day 2 候选证据规则的强化断言
 - [x] 完成 Day 3 JD 结构化抽取
+- [x] 完成 Day 4 LangGraph 岗位提取与证据检查主流程
 
-学习记录见 [Day 1](docs/day-01.md)、[Day 2](docs/day-02.md) 和 [Day 3](docs/day-03.md)。架构边界见 [docs/architecture.md](docs/architecture.md)。
+学习记录见 [Day 1](docs/day-01.md)、[Day 2](docs/day-02.md)、[Day 3](docs/day-03.md) 和 [Day 4](docs/day-04.md)。架构边界见 [docs/architecture.md](docs/architecture.md)。
