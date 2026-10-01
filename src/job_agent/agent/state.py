@@ -8,6 +8,7 @@ from job_agent.domain.matching import (
     CandidateEvidenceDraft,
     RequirementEvidence,
 )
+from job_agent.domain.reports import JobAnalysisReport
 
 
 class JobAnalysisState(TypedDict, total=False):
@@ -23,3 +24,5 @@ class JobAnalysisState(TypedDict, total=False):
     candidate_draft: CandidateEvidenceDraft  # 待确认的候选证据草稿
     candidate_approved: bool  # 用户是否批准候选草稿
     saved_evidence_id: str  # 已保存证据的 ID
+    clarified_requirements: list[str]  # 本轮已经补充过证据的岗位要求
+    analysis_report: JobAnalysisReport  # 最终岗位分析报告

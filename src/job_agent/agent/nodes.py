@@ -15,6 +15,7 @@ from job_agent.domain.matching import (
     RequirementEvidence,
 )
 from job_agent.domain.models import Evidence, EvidenceStatus
+from job_agent.domain.reports import JobAnalysisReport, ResumeSuggestionDraft
 
 
 ExtractJob = Callable[[str], JobPosting]
@@ -24,11 +25,36 @@ DraftCandidate = Callable[
     CandidateEvidenceDraft,
 ]
 PersistEvidence = Callable[[str, CandidateEvidenceDraft], Evidence]
+BuildReport = Callable[
+    [JobPosting, list[RequirementEvidence]],
+    JobAnalysisReport,
+]
+GenerateSuggestions = Callable[
+    [JobAnalysisReport],
+    list[ResumeSuggestionDraft],
+]
+RefineEvidence = Callable[
+    [list[RequirementEvidence]],
+    list[RequirementEvidence],
+]
 
 RELIABLE_EVIDENCE_STATUSES = {
     EvidenceStatus.CONFIRMED,
     EvidenceStatus.VERIFIED,
 }
+
+
+def _next_unclarified_requirement(
+    state: JobAnalysisState,
+) -> JobRequirement:
+    """返回本轮尚未补充过证据的第一条硬性要求。"""
+
+    clarified_requirements = set(state.get("clarified_requirements", []))
+    for requirement in state["missing_required"]:
+        if requirement.text not in clarified_requirements:
+            return requirement
+
+    raise ValueError("没有尚未补充证据的岗位要求")
 
 
 def extract_job_node(
@@ -72,12 +98,25 @@ def check_evidence_node(
     return {"missing_required": missing_required}
 
 
+def refine_evidence_node(
+    state: JobAnalysisState,
+    refine_evidence: RefineEvidence,
+) -> dict[str, list[RequirementEvidence]]:
+    """严格筛选能够直接支撑每条岗位要求的证据。"""
+
+    return {
+        "requirement_evidence": refine_evidence(
+            state["requirement_evidence"]
+        )
+    }
+
+
 def ask_for_evidence_node(
     state: JobAnalysisState,
 ) -> dict[str, str]:
     """暂停工作流，请用户补充与第一条证据缺口相关的经历。"""
 
-    requirement = state["missing_required"][0]
+    requirement = _next_unclarified_requirement(state)
 
     answer = interrupt(
         {
@@ -96,7 +135,7 @@ def draft_candidate_node(
 ) -> dict[str, CandidateEvidenceDraft]:
     """把用户回答整理成等待确认的候选证据草稿。"""
 
-    requirement = state["missing_required"][0]
+    requirement = _next_unclarified_requirement(state)
     draft = draft_candidate(
         requirement,
         state["clarification_answer"],
@@ -129,14 +168,22 @@ def review_candidate_node(
 def persist_evidence_node(
     state: JobAnalysisState,
     persist_evidence: PersistEvidence,
-) -> dict[str, str]:
+) -> dict[str, str | list[str]]:
     """把用户确认的候选草稿保存为正式证据。"""
 
     evidence = persist_evidence(
         state["profile_id"],
         state["candidate_draft"],
     )
-    return {"saved_evidence_id": evidence.id}
+    requirement = _next_unclarified_requirement(state)
+    clarified_requirements = [
+        *state.get("clarified_requirements", []),
+        requirement.text,
+    ]
+    return {
+        "saved_evidence_id": evidence.id,
+        "clarified_requirements": clarified_requirements,
+    }
 
 
 def mark_ready_node(
@@ -153,3 +200,30 @@ def mark_needs_clarification_node(
     """标记当前岗位仍有需要追问的硬性要求。"""
 
     return {"status": "needs_clarification"}
+
+
+def build_report_node(
+    state: JobAnalysisState,
+    build_report: BuildReport,
+) -> dict[str, JobAnalysisReport]:
+    """根据结构化岗位和匹配证据生成事实报告。"""
+
+    report = build_report(
+        state["job"],
+        state["requirement_evidence"],
+    )
+    return {"analysis_report": report}
+
+
+def generate_suggestions_node(
+    state: JobAnalysisState,
+    generate_suggestions: GenerateSuggestions,
+) -> dict[str, JobAnalysisReport]:
+    """生成候选简历建议并写回报告副本。"""
+
+    report = state["analysis_report"]
+    suggestions = generate_suggestions(report)
+    updated_report = report.model_copy(
+        update={"resume_suggestions": suggestions}
+    )
+    return {"analysis_report": updated_report}
