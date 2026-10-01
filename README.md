@@ -32,5 +32,6 @@
 - [x] 完成 Day 3 JD 结构化抽取
 - [x] 完成 Day 4 LangGraph 岗位提取与证据检查主流程
 - [x] 完成 Day 5 人工补充、确认证据并重新分析闭环
+- [x] 完成 Day 6 有来源的岗位报告与候选简历建议
 
-学习记录见 [Day 1](docs/day-01.md)、[Day 2](docs/day-02.md)、[Day 3](docs/day-03.md)、[Day 4](docs/day-04.md) 和 [Day 5](docs/day-05.md)。架构边界见 [docs/architecture.md](docs/architecture.md)。
+学习记录见 [Day 1](docs/day-01.md)、[Day 2](docs/day-02.md)、[Day 3](docs/day-03.md)、[Day 4](docs/day-04.md)、[Day 5](docs/day-05.md) 和 [Day 6](docs/day-06.md)。架构边界见 [docs/architecture.md](docs/architecture.md)。
